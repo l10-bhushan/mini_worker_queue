@@ -1,4 +1,4 @@
-package main
+package router
 
 import (
 	"fmt"
@@ -11,15 +11,15 @@ import (
 	"github.com/l10-bhushan/mini_worker_queue/internal/service"
 )
 
-type config struct {
-	addr string
+type Config struct {
+	Addr string
 }
 
-type application struct {
-	cfg *config
+type Application struct {
+	Cfg *Config
 }
 
-func (app *application) mount() http.Handler {
+func (app *Application) Mount() http.Handler {
 	repository := repository.NewJobRepository()
 	service := service.NewJobService(repository)
 	handler := handler.NewJobHandler(service)
@@ -34,9 +34,9 @@ func (app *application) mount() http.Handler {
 	return router
 }
 
-func (app *application) run(router http.Handler) error {
+func (app *Application) Run(router http.Handler) error {
 	server := &http.Server{
-		Addr:         app.cfg.addr,
+		Addr:         app.Cfg.Addr,
 		Handler:      router,
 		ReadTimeout:  time.Second * 20,
 		WriteTimeout: time.Second * 20,

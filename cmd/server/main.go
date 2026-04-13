@@ -3,17 +3,25 @@ package main
 import (
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/l10-bhushan/mini_worker_queue/internal/router"
 )
 
 func main() {
 	log.Println("Mini worker queue")
-	config := config{
-		addr: ":8080",
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error while loading the .env file", err)
 	}
-	app := application{
-		cfg: &config,
+	port := os.Getenv("PORT")
+	config := router.Config{
+		Addr: port,
 	}
-	if err := app.run(app.mount()); err != nil {
+	app := router.Application{
+		Cfg: &config,
+	}
+	if err := app.Run(app.Mount()); err != nil {
 		log.Println("Failed to start server ❌")
 		os.Exit(0)
 	}
