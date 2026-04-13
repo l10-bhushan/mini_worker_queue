@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: secret
-      POSTGRES_DB: mydb
+      POSTGRES_DB: jobs
 
     ports:
       - "5433:5432"

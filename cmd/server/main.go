@@ -15,13 +15,14 @@ func main() {
 		log.Fatal("Error while loading the .env file", err)
 	}
 	port := os.Getenv("PORT")
+	dsn := os.Getenv("DATABASE_URL")
 	config := router.Config{
 		Addr: port,
 	}
 	app := router.Application{
 		Cfg: &config,
 	}
-	if err := app.Run(app.Mount()); err != nil {
+	if err := app.Run(app.Mount(dsn)); err != nil {
 		log.Println("Failed to start server ❌")
 		os.Exit(0)
 	}

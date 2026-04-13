@@ -2,10 +2,12 @@ package router
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/l10-bhushan/mini_worker_queue/internal/config"
 	"github.com/l10-bhushan/mini_worker_queue/internal/handler"
 	"github.com/l10-bhushan/mini_worker_queue/internal/repository"
 	"github.com/l10-bhushan/mini_worker_queue/internal/service"
@@ -19,8 +21,12 @@ type Application struct {
 	Cfg *Config
 }
 
-func (app *Application) Mount() http.Handler {
-	repository := repository.NewJobRepository()
+func (app *Application) Mount(dsn string) http.Handler {
+	db, err := config.NewDb(dsn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	repository := repository.NewJobRepository(db)
 	service := service.NewJobService(repository)
 	handler := handler.NewJobHandler(service)
 	router := chi.NewRouter()
