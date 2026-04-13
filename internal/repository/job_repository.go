@@ -24,8 +24,12 @@ func NewJobRepository() *InMemoryJobDb {
 }
 
 // Repo method to GetAllJobs
-func (db *InMemoryJobDb) GetAllJobs(ctx context.Context) []map[string]model.Job {
-	return nil
+func (db *InMemoryJobDb) GetAllJobs(ctx context.Context) []model.Job {
+	var jobs []model.Job
+	for _, job := range db.data {
+		jobs = append(jobs, job)
+	}
+	return jobs
 }
 
 // Repo method to create new Jobs

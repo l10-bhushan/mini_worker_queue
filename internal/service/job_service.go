@@ -30,11 +30,9 @@ func NewJobService(repo *repository.InMemoryJobDb) *JobService {
 }
 
 // Service for getting all jobs
-func (service *JobService) GetAllJobs(ctx context.Context) {
-	err := service.repo.GetAllJobs(ctx)
-	if err != nil {
-		return
-	}
+func (service *JobService) GetAllJobs(ctx context.Context) []model.Job {
+	data := service.repo.GetAllJobs(ctx)
+	return data
 }
 
 // Service for creating a job
