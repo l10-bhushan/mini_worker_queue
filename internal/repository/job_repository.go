@@ -13,13 +13,13 @@ type JobRepository interface {
 
 // In memory db we will replace this with postgres or mongoDb in future
 type InMemoryJobDb struct {
-	data []map[string]model.Job
+	data map[string]model.Job
 }
 
 // Constructor method to return instance of Job db
 func NewJobRepository() *InMemoryJobDb {
 	return &InMemoryJobDb{
-		data: nil,
+		data: make(map[string]model.Job),
 	}
 }
 
@@ -29,6 +29,7 @@ func (db *InMemoryJobDb) GetAllJobs(ctx context.Context) []map[string]model.Job 
 }
 
 // Repo method to create new Jobs
-func (db *InMemoryJobDb) CreateJob(ctx context.Context, job model.Job) (model.Job, error) {
-	return model.Job{}, nil
+func (db *InMemoryJobDb) CreateJob(ctx context.Context, job model.Job) model.Job {
+	db.data[job.Id] = job
+	return job
 }
