@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/l10-bhushan/mini_worker_queue/internal/handler"
+	"github.com/l10-bhushan/mini_worker_queue/internal/repository"
+	"github.com/l10-bhushan/mini_worker_queue/internal/service"
 )
 
 type config struct {
@@ -17,11 +20,16 @@ type application struct {
 }
 
 func (app *application) mount() http.Handler {
+	repository := repository.NewJobRepository()
+	service := service.NewJobService(repository)
+	handler := handler.NewJobHandler(service)
 	router := chi.NewRouter()
 
 	router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Server up and running at PORT: 8080")
 	})
+	router.Get("/jobs", handler.GetAllJobs)
+	router.Post("/jobs/create", handler.CreateJob)
 
 	return router
 }
