@@ -18,7 +18,9 @@ type InMemoryJobDb struct {
 
 // Constructor method to return instance of Job db
 func NewJobRepository() *InMemoryJobDb {
-	return &InMemoryJobDb{}
+	return &InMemoryJobDb{
+		data: nil,
+	}
 }
 
 // Repo method to GetAllJobs
