@@ -15,15 +15,28 @@ type JobHandler struct {
 }
 
 func (handler *JobHandler) handleError(w http.ResponseWriter, err error) {
+	w.Header().Set("Content-Type", "application.json")
 	switch {
 	case errors.Is(err, service.ErrorJobNotFound):
-		http.Error(w, err.Error(), http.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Job not found",
+		})
 	case errors.Is(err, service.ErrorInternalServerError):
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Internal server error",
+		})
 	case errors.Is(err, service.ErrorBadRequest):
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "please check the request shcema",
+		})
 	default:
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Internal server error, please contact support",
+		})
 	}
 }
 

@@ -11,6 +11,13 @@ import (
 )
 
 var (
+	JobStatusPending    = "pending"
+	JobStatusCompleted  = "completed"
+	JobStatusFailed     = "failed"
+	JobStatusProcessing = "processing"
+)
+
+var (
 	ErrorJobNotFound         = errors.New("job not found")
 	ErrorBadRequest          = errors.New("please check request")
 	ErrorInternalServerError = errors.New("internal server error")
@@ -33,7 +40,7 @@ func NewJobService(repo *repository.PostgresDb) *JobService {
 func (service *JobService) GetAllJobs(ctx context.Context) ([]model.Job, error) {
 	data, err := service.repo.GetAllJobs(ctx)
 	if err != nil {
-		return []model.Job{}, nil
+		return []model.Job{}, err
 	}
 	return data, nil
 }
@@ -44,9 +51,9 @@ func (service *JobService) CreateJob(ctx context.Context, typ string, descriptio
 		Id:           uuid.New().String(),
 		Type:         typ,
 		Description:  description,
-		Status:       "processing",
-		Created_at:   time.Now().String(),
-		Completed_at: "",
+		Status:       JobStatusProcessing,
+		Created_at:   time.Now(),
+		Completed_at: nil,
 	}
 	result, err := service.repo.CreateJob(ctx, job)
 	if err != nil {

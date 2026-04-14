@@ -3,20 +3,20 @@ package repository
 import (
 	"context"
 	"errors"
-	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/l10-bhushan/mini_worker_queue/internal/model"
 )
 
 var (
-	DbErrorJobCreation  = errors.New("DbErrorJobCreation")
-	DbErrorFetchingJobs = errors.New("DbErrorFetchingJobs")
-	DbErrorParsingRow   = errors.New("DbErrorParsingRow")
+	DbErrorJobCreation  = errors.New("Job creation failed")
+	DbErrorFetchingJobs = errors.New("failed while fetching jobs")
+	DbErrorParsingRow   = errors.New("failed while parsing database row")
 )
 
 // Interface that defines all the methods on repository layer
 type JobRepository interface {
+	GetAllJobs(ctx context.Context) ([]model.Job, error)
 	CreateJob(ctx context.Context, job model.Job) (model.Job, error)
 }
 
@@ -65,7 +65,6 @@ func (repo *PostgresDb) CreateJob(ctx context.Context, job model.Job) (model.Job
 	query := `INSERT INTO jobs (id , type , description, status, created_at, completed_at) VALUES ($1, $2, $3, $4, $5, $6)`
 	_, err := repo.db.Exec(ctx, query, job.Id, job.Type, job.Description, job.Status, job.Created_at, job.Completed_at)
 	if err != nil {
-		log.Fatal(err)
 		return model.Job{}, DbErrorJobCreation
 	}
 	return job, nil
