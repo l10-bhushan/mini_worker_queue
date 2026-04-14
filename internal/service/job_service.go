@@ -11,13 +11,6 @@ import (
 )
 
 var (
-	JobStatusPending    = "pending"
-	JobStatusCompleted  = "completed"
-	JobStatusFailed     = "failed"
-	JobStatusProcessing = "processing"
-)
-
-var (
 	ErrorJobNotFound         = errors.New("job not found")
 	ErrorBadRequest          = errors.New("please check request")
 	ErrorInternalServerError = errors.New("internal server error")
@@ -51,7 +44,7 @@ func (service *JobService) CreateJob(ctx context.Context, typ string, descriptio
 		Id:           uuid.New().String(),
 		Type:         typ,
 		Description:  description,
-		Status:       JobStatusProcessing,
+		Status:       model.JobStatusProcessing,
 		Created_at:   time.Now(),
 		Completed_at: nil,
 	}

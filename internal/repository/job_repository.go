@@ -69,3 +69,7 @@ func (repo *PostgresDb) CreateJob(ctx context.Context, job model.Job) (model.Job
 	}
 	return job, nil
 }
+
+func (repo *PostgresDb) UpdateStatus(ctx context.Context, id string, status model.JobStatus) (model.Job, error) {
+	return model.Job{}, nil
+}
