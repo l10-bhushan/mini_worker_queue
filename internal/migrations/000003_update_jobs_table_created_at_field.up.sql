@@ -1,0 +1,5 @@
+ALTER TABLE jobs
+ALTER COLUMN created_at TYPE TEXT;
+
+ALTER TABLE jobs
+ALTER COLUMN completed_at TYPE TEXT;

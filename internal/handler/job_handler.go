@@ -22,6 +22,8 @@ func (handler *JobHandler) handleError(w http.ResponseWriter, err error) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	case errors.Is(err, service.ErrorBadRequest):
 		http.Error(w, err.Error(), http.StatusBadRequest)
+	default:
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 }
 

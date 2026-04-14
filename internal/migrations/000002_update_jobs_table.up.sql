@@ -1,0 +1,2 @@
+ALTER TABLE jobs
+ALTER COLUMN status TYPE TEXT;

@@ -19,11 +19,11 @@ var (
 
 // struct to hold the dependency injection of repository layer
 type JobService struct {
-	repo *repository.InMemoryJobDb
+	repo *repository.PostgresDb
 }
 
 // constructor function that returns us an instance of Jobservice struct
-func NewJobService(repo *repository.InMemoryJobDb) *JobService {
+func NewJobService(repo *repository.PostgresDb) *JobService {
 	return &JobService{
 		repo: repo,
 	}
@@ -42,9 +42,12 @@ func (service *JobService) CreateJob(ctx context.Context, typ string, descriptio
 		Type:         typ,
 		Description:  description,
 		Status:       "processing",
-		Created_at:   time.Now().Local().String(),
+		Created_at:   time.Now().String(),
 		Completed_at: "",
 	}
-	result := service.repo.CreateJob(ctx, job)
+	result, err := service.repo.CreateJob(ctx, job)
+	if err != nil {
+		return model.Job{}, err
+	}
 	return result, nil
 }
