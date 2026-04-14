@@ -36,7 +36,11 @@ func NewJobHandler(service *service.JobService) *JobHandler {
 
 // Handler for getting all jobs
 func (handler *JobHandler) GetAllJobs(w http.ResponseWriter, r *http.Request) {
-	data := handler.service.GetAllJobs(r.Context())
+	data, err := handler.service.GetAllJobs(r.Context())
+	if err != nil {
+		handler.handleError(w, err)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(dto.JobCreationSuccess{

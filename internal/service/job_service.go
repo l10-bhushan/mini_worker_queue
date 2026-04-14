@@ -30,9 +30,12 @@ func NewJobService(repo *repository.PostgresDb) *JobService {
 }
 
 // Service for getting all jobs
-func (service *JobService) GetAllJobs(ctx context.Context) []model.Job {
-	data := service.repo.GetAllJobs(ctx)
-	return data
+func (service *JobService) GetAllJobs(ctx context.Context) ([]model.Job, error) {
+	data, err := service.repo.GetAllJobs(ctx)
+	if err != nil {
+		return []model.Job{}, nil
+	}
+	return data, nil
 }
 
 // Service for creating a job
